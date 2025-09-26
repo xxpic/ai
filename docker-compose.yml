@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  ai_bot:
+    build: .
+    container_name: ai_neural_networks_bot
+    restart: unless-stopped
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - BOT_USERNAME=${BOT_USERNAME}
+      - ADMIN_USER_ID=${ADMIN_USER_ID}
+    env_file:
+      - .env
+    volumes:
+      - ./logs:/app/logs  # Для логов (если добавите)
+    networks:
+      - ai_bot_network
+    
+    # Настройки для мониторинга (опционально)
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import sys; sys.exit(0)'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  ai_bot_network:
+    driver: bridge
+
+# Если планируете добавить базу данных:
+# volumes:
+#   postgres_data:
